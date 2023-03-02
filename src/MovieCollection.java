@@ -31,7 +31,7 @@ public class MovieCollection
                 if(actors.get(j).equals(actors.get(x)){
                     actors.remove(j);
                 }
-
+//note
             }
         }
     }
