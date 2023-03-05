@@ -10,6 +10,55 @@ public class MovieCollection
     private ArrayList<Movie> movies;
     private Scanner scanner;
     private ArrayList<String> actors;
+    private ArrayList<String> genres;
+
+    public void makeList(ArrayList<String> array,String type){
+        if(type.equals("cast")){
+            for (Movie movie : movies) {
+                String temp = movie.getCast();
+                while (temp.indexOf("|") > 0) {
+                    int place = temp.indexOf("|");
+                    array.add(temp.substring(0, place));
+                    temp = temp.substring(place + 1);
+                }
+                array.add(temp);
+            }
+        }
+        else if(type.equals("genres")){
+            for (Movie movie : movies) {
+                String temp = movie.getGenres();
+                while (temp.indexOf("|") > 0) {
+                    int place = temp.indexOf("|");
+                    array.add(temp.substring(0, place));
+                    temp = temp.substring(place + 1);
+                }
+                array.add(temp);
+            }
+        }
+        for(int j=0; j<array.size();j++){
+            for(int x=j+1;x<array.size();x++){
+                if(array.get(j).equals(array.get(x))){
+                    array.remove(x);
+                    x--;
+                }
+            }
+        }
+
+        for (int t = 1; t < array.size(); t++)
+        {
+            String temp = array.get(t);
+
+            int possibleIndex = t;
+            while (possibleIndex > 0 && temp.compareTo(array.get(possibleIndex - 1)) < 0)
+            {
+                array.set(possibleIndex, array.get(possibleIndex - 1));
+                possibleIndex--;
+            }
+            array.set(possibleIndex, temp);
+        }
+
+
+    }
 
     public MovieCollection(String fileName)
     {
@@ -17,35 +66,11 @@ public class MovieCollection
         scanner = new Scanner(System.in);
 
         actors=new ArrayList<String>();
-        for (Movie movie : movies) {
-            String temp = movie.getCast();
-            while (temp.indexOf("|") > 0) {
-                int place = temp.indexOf("|");
-                actors.add(temp.substring(0, place));
-                temp = temp.substring(place + 1);
-            }
-            actors.add(temp);
-        }
-        for(int j=0; j<actors.size();j++){
-            for(int x=j+1;x<actors.size();x++){
-                if(actors.get(j).equals(actors.get(x))){
-                    actors.remove(x);
-                    x--;
-                }
-            }
-        }
-        for (int t = 1; t < actors.size(); t++)
-        {
-            String temp = actors.get(t);
+        makeList(actors, "cast");
+        genres=new ArrayList<String>();
+        makeList(genres, "genres");
 
-            int possibleIndex = t;
-            while (possibleIndex > 0 && temp.compareTo(actors.get(possibleIndex - 1)) < 0)
-            {
-                actors.set(possibleIndex, actors.get(possibleIndex - 1));
-                possibleIndex--;
-            }
-            actors.set(possibleIndex, temp);
-        }
+
     }
 
     public ArrayList<Movie> getMovies()
@@ -301,7 +326,28 @@ public class MovieCollection
 
     private void listGenres()
     {
+        for(int i=0; i<genres.size();i++){
+            System.out.println(i+1+". "+genres.get(i));
+        }
+        System.out.println("Choose a genre (number):");
+        int num=scanner.nextInt();
+        String searchTerm=genres.get(num-1);
+        ArrayList<Movie> temp=new ArrayList<Movie>();
+        for(int j=0; j<movies.size();j++){
+            if(movies.get(j).getGenres().contains(searchTerm)){
+                temp.add(movies.get(j));
+            }
+        }
+        sortResults(temp);
+        int place=1;
+        for(Movie movie:temp){
+            System.out.println(place+". "+movie.getTitle());
+            place++;
+        }
+        System.out.println("Which movie would you like to learn more about?");
 
+        num=scanner.nextInt();
+        displayMovieInfo(temp.get(num-1));
     }
 
     private void listHighestRated()
