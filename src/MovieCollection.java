@@ -352,12 +352,64 @@ public class MovieCollection
 
     private void listHighestRated()
     {
+        ArrayList<Movie> temp=movies;
+        for (int j = 1; j < temp.size(); j++)
+        {
+            Movie tempMovie = temp.get(j);
+            double tempRating = tempMovie.getUserRating();
 
+            int possibleIndex = j;
+            while (possibleIndex > 0 && tempRating>temp.get(possibleIndex - 1).getUserRating())
+            {
+                temp.set(possibleIndex, temp.get(possibleIndex - 1));
+                possibleIndex--;
+            }
+            temp.set(possibleIndex, tempMovie);
+        }
+        ArrayList<Movie> top50=new ArrayList<Movie>();
+        for(int i=0; i<50; i++){
+            top50.add(temp.get(i));
+        }
+        int place=1;
+        for(Movie movie:top50){
+            System.out.println(place+". "+movie.getTitle()+ ", User Rating: "+movie.getUserRating());
+            place++;
+        }
+
+        System.out.println("Which movie would you like to learn about?");
+        int num=scanner.nextInt();
+        displayMovieInfo(temp.get(num-1));
     }
 
     private void listHighestRevenue()
     {
+        ArrayList<Movie> temp=movies;
+        for (int j = 1; j < temp.size(); j++)
+        {
+            Movie tempMovie = temp.get(j);
+            int tempRevenue = tempMovie.getRevenue();
 
+            int possibleIndex = j;
+            while (possibleIndex > 0 && tempRevenue>temp.get(possibleIndex - 1).getRevenue())
+            {
+                temp.set(possibleIndex, temp.get(possibleIndex - 1));
+                possibleIndex--;
+            }
+            temp.set(possibleIndex, tempMovie);
+        }
+        ArrayList<Movie> top50=new ArrayList<Movie>();
+        for(int i=0; i<50; i++){
+            top50.add(temp.get(i));
+        }
+        int place=1;
+        for(Movie movie:top50){
+            System.out.println(place+". "+movie.getTitle()+ ", Revenue: "+movie.getRevenue());
+            place++;
+        }
+
+        System.out.println("Which movie would you like to learn about?");
+        int num=scanner.nextInt();
+        displayMovieInfo(temp.get(num-1));
     }
 
     private void importMovieList(String fileName)
